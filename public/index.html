@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hadiah Ulang Tahun</title>
+<style>
+:root{--a:#f2a0bd;--b:#c4b0f0;--bg:#fff5f0;--ink:#4a3446;--card:rgba(255,255,255,.72);--ln:rgba(120,80,110,.16);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root[data-t=lav]{--a:#b9a2f0;--b:#f2a0bd}:root[data-t=peach]{--a:#ffb38a;--b:#f7d27a}:root[data-t=mint]{--a:#8fd9bd;--b:#a9c8f5}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#231a2a;--ink:#f6e9f2;--card:rgba(52,40,64,.72);--ln:rgba(255,255,255,.14)}}
+:root[data-theme="dark"]{--bg:#231a2a;--ink:#f6e9f2;--card:rgba(52,40,64,.72);--ln:rgba(255,255,255,.14)}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
+body{margin:0;font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:radial-gradient(circle at 15% 10%,color-mix(in srgb,var(--a) 35%,transparent),transparent 45%),radial-gradient(circle at 85% 40%,color-mix(in srgb,var(--b) 35%,transparent),transparent 45%),var(--bg);overflow-x:hidden;padding-bottom:84px}
+h1,h2,h3{font-family:Georgia,"Playfair Display",serif;font-weight:600;margin:.2em 0}
+h1{font-size:clamp(2.2rem,9vw,4.2rem);line-height:1.1}h2{font-size:clamp(1.6rem,6vw,2.4rem);text-align:center}
+section{padding:72px 20px;max-width:980px;margin:auto;text-align:center}
+.sub{opacity:.75;max-width:520px;margin:0 auto 22px}
+.card{background:var(--card);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid var(--ln);border-radius:24px;box-shadow:0 12px 40px rgba(120,60,100,.12);padding:22px}
+button,.btn{font:inherit;cursor:pointer;border:0;border-radius:999px;padding:12px 22px;min-height:44px;color:#fff;background:linear-gradient(135deg,var(--a),var(--b));box-shadow:0 6px 18px rgba(0,0,0,.14);transition:transform .2s}
+button:hover,.btn:hover{transform:translateY(-2px)}button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid var(--b);outline-offset:2px}
+button.ghost{background:var(--card);color:var(--ink);border:1px solid var(--ln);box-shadow:none}
+button.sm{padding:6px 14px;min-height:36px;font-size:.85rem}
+.row{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:18px}
+input[type=text],input[type=date],input[type=number],textarea,select{width:100%;font:inherit;padding:10px 12px;border-radius:12px;border:1px solid var(--ln);background:var(--card);color:var(--ink)}
+textarea{min-height:110px;resize:vertical}label{display:block;text-align:left;font-size:.85rem;margin:12px 0 4px;opacity:.8}
+/* opening */
+#open{position:fixed;inset:0;z-index:50;display:grid;place-items:center;text-align:center;padding:24px;background:radial-gradient(circle at 50% 30%,color-mix(in srgb,var(--a) 40%,var(--bg)),var(--bg));transition:opacity .9s,transform .9s}
+#open.gone{opacity:0;transform:scale(1.15);pointer-events:none}
+.fl{position:absolute;bottom:-40px;animation:up linear infinite;opacity:.6;pointer-events:none}
+@keyframes up{to{transform:translateY(-110vh) rotate(40deg)}}
+.env{font-size:92px;animation:bob 2.4s ease-in-out infinite;background:none;box-shadow:none;padding:0;min-height:0;filter:drop-shadow(0 10px 14px rgba(0,0,0,.18))}
+@keyframes bob{50%{transform:translateY(-12px) rotate(-4deg)}}
+/* hero */
+.photo{width:min(260px,70vw);aspect-ratio:1;border-radius:50%;object-fit:cover;border:6px solid #fff;box-shadow:0 14px 40px rgba(120,60,100,.25);background:linear-gradient(135deg,var(--a),var(--b));display:grid;place-items:center;font-size:64px;margin:0 auto 20px;overflow:hidden}
+.photo img{width:100%;height:100%;object-fit:cover}
+.deco{position:absolute;pointer-events:none;animation:bob 4s ease-in-out infinite;opacity:.7}
+.rv{opacity:0;transform:translateY(26px);transition:opacity .8s,transform .8s}.rv.in{opacity:1;transform:none}
+/* gallery */
+.mas{columns:2;column-gap:12px}@media(min-width:720px){.mas{columns:3}}
+.mas figure{margin:0 0 12px;break-inside:avoid;border-radius:16px;overflow:hidden;cursor:pointer;position:relative;background:var(--card);box-shadow:0 6px 18px rgba(0,0,0,.1)}
+.mas img{width:100%;display:block;object-fit:cover}.mas figcaption{font-size:.8rem;padding:6px 10px;text-align:left}
+.empty{opacity:.7;padding:30px;border:2px dashed var(--ln);border-radius:20px}
+/* modal */
+.mod{position:fixed;inset:0;z-index:60;background:rgba(30,15,30,.6);display:none;place-items:center;padding:16px;backdrop-filter:blur(4px)}
+.mod.on{display:grid;animation:fi .3s}@keyframes fi{from{opacity:0}}
+.box{max-width:560px;width:100%;max-height:88vh;max-height:88dvh;overflow:auto;text-align:left;background:var(--bg);border-radius:24px;padding:22px;border:1px solid var(--ln);animation:pop .4s}
+@keyframes pop{from{transform:scale(.85)}}
+#lb img{max-width:92vw;max-height:70vh;border-radius:14px;display:block;margin:auto}#lb .cap{color:#fff;text-align:center;margin-top:10px}
+#lb .nav{position:absolute;top:50%;font-size:22px;padding:10px 16px}
+.letter{background:#fffaf0;color:#5b4036;font-family:Georgia,serif;white-space:pre-wrap;line-height:1.8;padding:26px;border-radius:12px}
+/* timeline */
+.tl{position:relative;text-align:left;padding-left:26px;border-left:3px solid var(--a);margin:0 auto;max-width:620px}
+.tl .it{margin-bottom:26px;position:relative}.tl .it::before{content:"";position:absolute;left:-36px;top:6px;width:16px;height:16px;border-radius:50%;background:var(--b);border:3px solid var(--bg)}
+.tl img{width:100%;max-height:240px;object-fit:cover;border-radius:14px;margin-top:8px}.tl small{opacity:.65}
+/* cake */
+.cake{font-size:min(22vw,96px);line-height:1;margin:10px 0}.cake .c{display:inline-block;cursor:pointer;transition:opacity .5s,filter .5s;background:none;box-shadow:none;padding:0;min-height:0;font-size:inherit}
+.cake .off{filter:grayscale(1) opacity(.5)}
+.q .opt{display:block;width:100%;margin:8px 0;text-align:left;background:var(--card);color:var(--ink);border:1px solid var(--ln);box-shadow:none}
+.q .opt.ok{background:#9be3b5;color:#143}.q .opt.no{background:#f7b3b3;color:#411}
+.gift{font-size:84px;cursor:pointer;background:none;box-shadow:none;padding:0;min-height:0}.gift.op{animation:shake .6s}@keyframes shake{25%{transform:rotate(-12deg)}75%{transform:rotate(12deg)}}
+.heart{font-size:72px;background:none;box-shadow:none;padding:0;min-height:0;transition:transform .15s}.heart:active{transform:scale(1.3)}
+.ed .r{border:1px solid var(--ln);border-radius:14px;padding:10px;margin:8px 0;display:grid;gap:6px}
+.ed .th{width:64px;height:64px;object-fit:cover;border-radius:10px}
+#toast{position:fixed;left:50%;bottom:84px;transform:translateX(-50%) translateY(30px);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;opacity:0;transition:.3s;z-index:90;pointer-events:none;max-width:90vw}
+#toast.on{opacity:1;transform:translateX(-50%)}
+nav{position:fixed;left:0;right:0;bottom:0;z-index:40;padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px));background:var(--card);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--ln);display:flex;gap:6px;overflow-x:auto;justify-content:safe center}
+nav a{color:var(--ink);text-decoration:none;font-size:.82rem;padding:8px 12px;border-radius:999px;white-space:nowrap;min-height:36px}nav a.cur{background:linear-gradient(135deg,var(--a),var(--b));color:#fff}
+#cv{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:80}
+.viz{display:inline-flex;gap:3px;align-items:end;height:18px;vertical-align:middle}.viz i{width:4px;height:4px;background:var(--a);border-radius:2px}.viz.on i{animation:eq .8s ease-in-out infinite alternate}.viz i:nth-child(2){animation-delay:.2s}.viz i:nth-child(3){animation-delay:.4s}.viz i:nth-child(4){animation-delay:.1s}
+@keyframes eq{to{height:18px}}
+#music{position:fixed;right:12px;top:calc(12px + env(safe-area-inset-top,0px));z-index:45;display:flex;gap:8px;align-items:center;padding:6px 10px}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}.rv{opacity:1;transform:none}}
+
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./supabase-config.js"></script>
+</head>
+<body>
+  
+<canvas id="cv" aria-hidden="true"></canvas>
+<div id="open"><div id="fls" aria-hidden="true"></div><div style="position:relative">
+<p style="letter-spacing:.2em;text-transform:uppercase;font-size:.8rem;opacity:.7">Someone Special Has a Surprise for You</p>
+<h1 id="oName">Untukmu</h1>
+<button class="env" id="env" aria-label="Buka amplop hadiah">💌</button><br><br>
+<button id="openBtn">Buka Hadiahmu</button></div></div>
+
+<div class="card" id="music"><button class="sm" id="mp" aria-label="Putar atau jeda musik">♪ Musik</button><span class="viz" id="viz" aria-hidden="true"><i></i><i></i><i></i><i></i></span><input type="range" id="vol" min="0" max="1" step=".05" value=".6" aria-label="Volume" style="width:70px"><audio id="au" loop></audio></div>
+
+<section id="hero" style="min-height:100vh;display:flex;flex-direction:column;justify-content:center;position:relative">
+<span class="deco" style="left:6%;top:18%;font-size:34px">🌸</span><span class="deco" style="right:8%;top:30%;font-size:30px;animation-delay:1s">✨</span><span class="deco" style="left:10%;bottom:14%;font-size:36px;animation-delay:2s">🎈</span>
+<div class="photo" id="mainPh" role="img" aria-label="Foto utama">🎂</div>
+<h1 class="rv">Happy Birthday, <span id="hName">Kamu</span>!</h1>
+<p class="sub rv" id="hSub"></p><p id="dateLine" class="rv" style="opacity:.8"></p>
+<div class="row rv"><a class="btn" href="#letter">Ada Pesan Buat Kamu</a><a class="btn" href="#gallery">Lihat Kenangan Kita</a></div>
+<div class="row"><button class="ghost sm" id="editBtn">✏️ Edit Kenangan</button><button class="ghost sm" id="themeBtn" aria-label="Ganti mode terang atau gelap">🌓</button></div></section>
+
+<section id="gallery"><h2 class="rv">Photo Memories</h2><p class="sub">Ketuk foto untuk memperbesar.</p><div class="mas" id="mas"></div></section>
+
+<section id="letter"><h2 class="rv">There's Something I Want You to Know…</h2><div class="row"><button id="openLetter">💌 Buka Surat</button></div></section>
+
+<section id="timeline"><h2 class="rv">Memory Timeline</h2><br><div class="tl" id="tl"></div></section>
+
+<section id="cake"><h2 class="rv">Birthday Cake</h2><div class="cake" id="cakeBox"><button class="c" data-c aria-label="Lilin 1">🕯️</button><button class="c" data-c aria-label="Lilin 2">🕯️</button><button class="c" data-c aria-label="Lilin 3">🕯️</button><br>🎂</div>
+<div class="row"><button id="wishBtn">Make a Wish</button><button class="ghost" id="genBtn">Kasih Aku Harapan</button></div><p id="wishTxt" class="card" style="max-width:520px;margin:18px auto;min-height:60px" aria-live="polite">Klik lilin atau tombol Make a Wish.</p></section>
+
+<section id="quiz"><h2 class="rv">Interactive Quiz</h2><div class="card q" id="qBox" aria-live="polite" style="max-width:560px;margin:18px auto;text-align:left"></div></section>
+
+<section id="surprise"><h2 class="rv">Hidden Surprise</h2><button class="gift" id="gift" aria-label="Buka kotak hadiah">🎁</button><p id="giftTxt" class="card" style="max-width:520px;margin:12px auto;display:none"></p>
+<div class="row"><button id="surBtn" class="ghost">Jangan Diklik Kalau Belum Siap</button></div></section>
+
+<section id="final"><h2 class="rv">Final Birthday Message</h2><p class="card rv" id="fin" style="max-width:560px;margin:18px auto;white-space:pre-wrap"></p>
+<button class="heart" id="heart" aria-label="Kirim cinta">💗</button><p id="heartTxt" style="min-height:28px"></p>
+<h3 style="margin-top:36px">Share This Birthday Website</h3><p class="sub" id="shareNote">Foto dan musik hanya tersimpan di browser ini, jadi link biasa tidak membawanya ke penerima. Tekan Export Config, lalu minta Claude menerbitkan versi final dengan foto tertanam, dan bagikan link versi itu.</p>
+<div class="row"><button id="cp">🔗 Salin URL</button><button id="wa">WhatsApp</button><button class="ghost" id="shr">Bagikan…</button><button class="ghost" id="exp">Export Config</button><label class="btn ghost" style="margin:0;cursor:pointer">Import<input type="file" id="imp" accept=".json" hidden></label><button class="ghost" id="top">↑ Back to Top</button></div></section>
+
+<nav id="nav" aria-label="Navigasi"><a href="#hero">Beranda</a><a href="#gallery">Foto</a><a href="#letter">Surat</a><a href="#timeline">Timeline</a><a href="#cake">Kue</a><a href="#quiz">Kuis</a><a href="#surprise">Kejutan</a><a href="#final">Penutup</a></nav>
+
+<div class="mod" id="lb" role="dialog" aria-modal="true" aria-label="Foto"><button class="nav" id="lp" style="left:8px" aria-label="Sebelumnya">‹</button><div><img id="lbi" alt=""><div class="cap" id="lbc"></div></div><button class="nav" id="ln" style="right:8px" aria-label="Berikutnya">›</button><button class="sm" id="lx" style="position:absolute;top:14px;right:14px" aria-label="Tutup">✕</button></div>
+<div class="mod" id="lt" role="dialog" aria-modal="true"><div class="box"><div class="letter" id="ltx"></div><div class="row"><button id="lc">Tutup Surat</button></div></div></div>
+<div class="mod" id="ed" role="dialog" aria-modal="true" aria-label="Editor"><div class="box ed" id="edb"></div></div>
+<div id="toast" role="status"></div>
+<script type="application/json" id="seed"></script>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const RM=matchMedia('(prefers-reduced-motion:reduce)').matches;
+const DEF={to:"Kamu",from:"Seseorang",age:"",date:"",theme:"pink",sub:"Satu hari penuh doa baik, khusus untukmu.",
+letter:"Selamat ulang tahun, [NAMA].\n\nHari ini bukan cuma tentang bertambahnya usia, tetapi juga tentang semua hal yang sudah kamu lewati untuk sampai di titik ini.\n\nSemoga hal-hal baik perlahan menemukan jalannya kepadamu. Semoga kamu tetap punya alasan untuk tersenyum, keberanian untuk menghadapi hal-hal yang belum pasti, dan seseorang yang selalu bisa kamu jadikan tempat pulang.\n\nTerima kasih sudah menjadi bagian dari cerita ini.\n\nHappy Birthday. Semoga dunia memperlakukanmu dengan lebih lembut.",
+surprise:"Kamu lebih berarti daripada yang kamu kira. Terima kasih sudah ada. 💝",closing:"Sekali lagi, selamat ulang tahun. Semoga tahun ini lebih ramah padamu.",
+gallery:[],timeline:[{id:"t1",t:"First Meeting",d:"",x:"Awal dari sebuah cerita."},{id:"t2",t:"Our Favorite Moment",d:"",x:"Momen yang selalu bikin senyum."},{id:"t3",t:"The Day We Laughed So Hard",d:"",x:"Ketawa sampai lupa waktu."},{id:"t4",t:"Today: Your Special Day",d:"",x:"Hari ini, giliranmu dirayakan."}],
+quiz:"Siapa yang paling senang kamu berulang tahun?|Aku;Aku juga;Semua orang di sekitarmu|3\nKado terbaik untukmu adalah...|Kue;Waktu bersama;Dua-duanya|3\nUmur hanyalah...|Angka;Level baru;Alasan makan kue|2"};
+const WISH=["Semoga harimu semanis kue ulang tahunmu.","Semoga semua usahamu pelan-pelan berbuah.","Semoga kamu selalu dikelilingi orang yang tulus.","Semoga kesehatan selalu menemanimu.","Semoga tidur nyenyak dan bangun dengan semangat.","Semoga rezekimu mengalir lancar.","Semoga hal yang kamu tunggu segera datang.","Semoga kamu selalu berani mencoba.","Semoga tawamu tidak pernah kehabisan alasan.","Semoga kamu pulang ke tempat yang hangat.","Semoga mimpimu selangkah lebih dekat.","Semoga kamu lebih sayang pada dirimu sendiri.","Semoga hari buruk cepat berlalu dan hari baik tinggal lama.","Semoga kamu selalu merasa cukup dan dicintai.","Semoga tahun ini penuh kejutan manis."];
+let SEED=null;try{SEED=JSON.parse(document.getElementById("seed").textContent)}catch(e){}
+let cfg;try{cfg={...DEF,...(SEED?SEED.cfg:JSON.parse(localStorage.getItem("bd_cfg")||"{}"))}}catch(e){cfg={...DEF}}
+const save=()=>{if(SEED)return;try{localStorage.setItem("bd_cfg",JSON.stringify(cfg))}catch(e){toast("Gagal menyimpan pengaturan")}};
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fill=s=>s.replace(/\[NAMA\]/g,cfg.to);
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove("on"),2600)}
+/* IndexedDB */
+const dbp=new Promise((r,j)=>{try{const q=indexedDB.open("bd",1);q.onupgradeneeded=()=>q.result.createObjectStore("p");q.onsuccess=()=>r(q.result);q.onerror=()=>j(q.error)}catch(e){j(e)}});
+dbp.catch(()=>{});try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
+const tx=(m,f)=>dbp.then(d=>new Promise((r,j)=>{const t=d.transaction("p",m),q=f(t.objectStore("p"));t.oncomplete=()=>r(q.result);t.onerror=()=>j(t.error)}));
+const gget=k=>tx("readonly",s=>s.get(k)),gput=(k,v)=>tx("readwrite",s=>s.put(v,k)),gdel=k=>tx("readwrite",s=>s.delete(k));
+const urls={};async function url(k){if(urls[k])return urls[k];if(SEED)return SEED.ph&&SEED.ph[k]||null;try{const b=await gget(k);if(!b)return null;return urls[k]=URL.createObjectURL(b)}catch(e){return null}}
+function drop(k){if(urls[k]){URL.revokeObjectURL(urls[k]);delete urls[k]}}
+const OK=["image/jpeg","image/png","image/webp"];
+async function prep(f){if(!OK.includes(f.type)&&!/\.(jpe?g|png|webp)$/i.test(f.name))throw new Error("Format \""+f.name+"\" tidak didukung. Gunakan JPG, PNG, atau WebP.");
+if(f.size>10*1048576)throw new Error("\""+f.name+"\" lebih dari 10 MB.");
+let bm;try{bm=await createImageBitmap(f,{imageOrientation:"from-image"})}catch(e){throw new Error("\""+f.name+"\" tidak bisa dibaca sebagai gambar.")}
+const s=Math.min(1,1400/Math.max(bm.width,bm.height)),c=document.createElement("canvas");c.width=bm.width*s;c.height=bm.height*s;c.getContext("2d").drawImage(bm,0,0,c.width,c.height);
+bm.close&&bm.close();const tb=t=>new Promise(r=>c.toBlob(r,t,.85));let b=await tb("image/webp");if(!b||b.type!=="image/webp")b=await tb("image/jpeg");return b||f}
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+/* render */
+let rq=Promise.resolve();const render=()=>(rq=rq.then(render0).catch(()=>{}));
+async function render0(){
+document.documentElement.dataset.t=cfg.theme==="pink"?"":cfg.theme;
+$("#oName").textContent=cfg.to;$("#hName").textContent=cfg.to+(cfg.age?" ("+cfg.age+")":"");$("#hSub").textContent=fill(cfg.sub);
+$("#dateLine").textContent=cfg.date?"🎂 "+new Date(cfg.date+"T00:00").toLocaleDateString("id-ID",{day:"numeric",month:"long",year:"numeric"})+(cfg.from?" · dari "+cfg.from:""):(cfg.from?"dari "+cfg.from:"");
+$("#fin").textContent=fill(cfg.closing);
+const mu=await url("main"),mp=$("#mainPh");mp.innerHTML=mu?`<img alt="Foto ${esc(cfg.to)}" src="${mu}">`:"🎂";
+const m=$("#mas");m.innerHTML="";
+if(!cfg.gallery.length)m.outerHTML='<div class="empty" id="mas">Belum ada foto. Tekan “Edit Kenangan” untuk menambahkan foto.</div>';
+else{if(m.classList.contains("mas")===false)$("#mas").className="mas";
+for(const [i,g] of cfg.gallery.entries()){const u=await url(g.id);if(!u)continue;const f=document.createElement("figure");f.tabIndex=0;f.setAttribute("role","button");f.setAttribute("aria-label","Buka foto "+(i+1));f.innerHTML=`<img loading="lazy" alt="${esc(g.cap||"Kenangan "+(i+1))}" src="${u}">${g.cap?`<figcaption>${esc(g.cap)}</figcaption>`:""}`;f.onclick=()=>lbOpen(i);f.onkeydown=e=>{if(e.key==="Enter")lbOpen(i)};$("#mas").appendChild(f)}}
+const tl=$("#tl");tl.innerHTML="";
+for(const t of cfg.timeline){const u=await url("tl_"+t.id),d=document.createElement("div");d.className="it rv";d.innerHTML=`<small>${esc(t.d?new Date(t.d+"T00:00").toLocaleDateString("id-ID",{day:"numeric",month:"long",year:"numeric"}):"")}</small><h3>${esc(t.t)}</h3><div>${esc(t.x)}</div>${u?`<img alt="${esc(t.t)}" src="${u}">`:""}`;tl.appendChild(d)}
+if(!cfg.timeline.length)tl.innerHTML='<div class="empty">Belum ada kenangan di timeline.</div>';
+observe();buildQuiz();
+}
+const io=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){x.target.classList.add("in");io.unobserve(x.target)}}),{threshold:.15});
+function observe(){$$("section:not(#hero) .rv:not(.in)").forEach(e=>io.observe(e))}
+const so=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)$$("nav a").forEach(a=>a.classList.toggle("cur",a.getAttribute("href")==="#"+x.target.id))}),{rootMargin:"-45% 0px -50% 0px"});
+$$("section").forEach(s=>so.observe(s));
+/* confetti */
+const cv=$("#cv"),cx=cv.getContext("2d");let ps=[],run=0;
+function confetti(n=140){if(RM)return;cv.width=innerWidth;cv.height=innerHeight;const cl=["#f2a0bd","#c4b0f0","#ffd98a","#9be3b5","#fff"];for(let i=0;i<n;i++)ps.push({x:innerWidth/2,y:innerHeight*.45,vx:(Math.random()-.5)*14,vy:-Math.random()*13-3,r:Math.random()*6+3,c:cl[i%5],a:1});if(!run){run=1;requestAnimationFrame(tick)}}
+function tick(){cx.clearRect(0,0,cv.width,cv.height);ps.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.32;p.a-=.008;cx.globalAlpha=Math.max(p.a,0);cx.fillStyle=p.c;cx.fillRect(p.x,p.y,p.r,p.r*1.5)});ps=ps.filter(p=>p.a>0&&p.y<cv.height);if(ps.length)requestAnimationFrame(tick);else{run=0;cx.clearRect(0,0,cv.width,cv.height)}}
+function chime(){try{const a=new (window.AudioContext||webkitAudioContext)();[523,659,784,1047].forEach((f,i)=>{const o=a.createOscillator(),g=a.createGain();o.frequency.value=f;o.connect(g);g.connect(a.destination);g.gain.setValueAtTime(.15,a.currentTime+i*.12);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+i*.12+.4);o.start(a.currentTime+i*.12);o.stop(a.currentTime+i*.12+.45)})}catch(e){}}
+/* opening */
+const fl=$("#fls");for(let i=0;i<16&&!RM;i++){const s=document.createElement("span");s.className="fl";s.textContent=["💗","✨","⭐","🌸"][i%4];s.style.cssText=`left:${Math.random()*100}%;font-size:${14+Math.random()*22}px;animation-duration:${7+Math.random()*8}s;animation-delay:${-Math.random()*10}s`;fl.appendChild(s)}
+function openGift(){$("#open").classList.add("gone");chime();setTimeout(()=>{confetti(180);$("#open").style.display="none"},500);$$("#hero .rv").forEach((e,i)=>setTimeout(()=>e.classList.add("in"),400+i*180))}
+$("#openBtn").onclick=$("#env").onclick=openGift;
+/* modal helpers */
+let lastF;function mo(id){lastF=document.activeElement;$(id).classList.add("on");document.body.style.overflow="hidden";const f=$(id).querySelector("button,input,textarea");f&&f.focus()}
+function mc(id){if(id==="#lt")clearInterval(th);if(id==="#ed"&&window.edApply)edApply();$(id).classList.remove("on");document.body.style.overflow="";lastF&&lastF.focus&&lastF.focus()}
+document.addEventListener("keydown",e=>{if(e.key==="Escape")$$(".mod.on").forEach(m=>mc("#"+m.id));if($("#lb").classList.contains("on")){if(e.key==="ArrowRight")lbGo(1);if(e.key==="ArrowLeft")lbGo(-1)}});
+$$(".mod").forEach(m=>m.addEventListener("click",e=>{if(e.target===m)mc("#"+m.id)}));
+/* lightbox */
+let li=0;async function lbShow(){const g=cfg.gallery[li],u=await url(g.id);$("#lbi").src=u||"";$("#lbi").alt=g.cap||"Kenangan";$("#lbc").textContent=g.cap||""}
+function lbOpen(i){li=i;lbShow();mo("#lb")}function lbGo(d){li=(li+d+cfg.gallery.length)%cfg.gallery.length;lbShow()}
+$("#lp").onclick=()=>lbGo(-1);$("#ln").onclick=()=>lbGo(1);$("#lx").onclick=()=>mc("#lb");
+let sx=0;$("#lb").addEventListener("touchstart",e=>sx=e.touches[0].clientX,{passive:true});$("#lb").addEventListener("touchend",e=>{const d=e.changedTouches[0].clientX-sx;if(Math.abs(d)>50)lbGo(d<0?1:-1)});
+/* letter */
+let th;$("#openLetter").onclick=()=>{mo("#lt");const t=fill(cfg.letter),el=$("#ltx");clearInterval(th);el.textContent="";if(RM){el.textContent=t;return}let i=0;th=setInterval(()=>{el.textContent=t.slice(0,++i);if(i>=t.length)clearInterval(th)},22)};
+$("#lc").onclick=()=>{clearInterval(th);mc("#lt")};
+/* cake / wishes */
+let bag=[];const wish=()=>{if(!bag.length)bag=[...WISH].sort(()=>Math.random()-.5);return bag.pop()};
+function blow(){$$("[data-c]").forEach(c=>c.classList.add("off"));setTimeout(()=>{confetti();$("#wishTxt").textContent="🎉 Lilin padam! "+wish()},500)}
+$$("[data-c]").forEach(c=>c.onclick=()=>{c.classList.add("off");if($$("[data-c]:not(.off)").length===0)blow()});
+$("#wishBtn").onclick=()=>{$$("[data-c]").forEach(c=>c.classList.remove("off"));setTimeout(blow,150)};
+$("#genBtn").onclick=()=>{$("#wishTxt").textContent=wish()};
+/* quiz */
+let qi=0,sc=0;function buildQuiz(){qi=0;sc=0;showQ()}
+function parseQ(){return cfg.quiz.split("\n").map(l=>l.split("|")).filter(p=>p.length>=3&&p[1].trim()).map(p=>({q:p[0].trim(),o:p[1].split(";").map(s=>s.trim()).filter(Boolean),c:(parseInt(p[2])||1)-1})).map(x=>({...x,c:Math.min(Math.max(x.c,0),Math.max(x.o.length-1,0))}))}
+function showQ(){const qs=parseQ(),b=$("#qBox");if(!qs.length){b.textContent="Belum ada pertanyaan kuis.";return}
+if(qi>=qs.length){const p=sc/qs.length;b.innerHTML=`<h3 style="text-align:center">Skor: ${sc}/${qs.length}</h3><p style="text-align:center">${p===1?"Sempurna! Kamu memang paling tahu. 💖":p>.5?"Hampir sempurna, manis sekali. ✨":"Tidak apa-apa, yang penting kamu di sini. 🌸"}</p><div class="row"><button id="qr">Ulangi</button></div>`;$("#qr").onclick=buildQuiz;if(p===1)confetti();return}
+const q=qs[qi];b.innerHTML=`<small>Pertanyaan ${qi+1}/${qs.length}</small><h3>${esc(q.q)}</h3>`;
+q.o.forEach((o,i)=>{const x=document.createElement("button");x.className="opt";x.textContent=o;x.onclick=()=>{const r=i===q.c;if(r)sc++;$$(".opt").forEach((n,j)=>{n.disabled=true;if(j===q.c)n.classList.add("ok");else if(j===i)n.classList.add("no")});const f=document.createElement("p");f.textContent=r?"Betul! Kamu hebat. 💕":"Hampir! Tapi tetap manis. 😄";b.appendChild(f);const n=document.createElement("button");n.textContent=qi+1<qs.length?"Lanjut":"Lihat Hasil";n.onclick=()=>{qi++;showQ()};b.appendChild(n)};b.appendChild(x)})}
+/* surprise */
+$("#gift").onclick=function(){this.classList.add("op");this.textContent="🎉";const t=$("#giftTxt");t.style.display="block";t.textContent=fill(cfg.surprise);confetti(90)};
+$("#surBtn").onclick=()=>{clearInterval(th);$("#ltx").textContent="";const el=$("#ltx");el.textContent=fill(cfg.surprise);mo("#lt");confetti(200)};
+const hs=["Kamu disayang. 💗","Terima kasih sudah ada.","Satu lagi buat kamu 🌷","Kamu luar biasa.","Peluk jauh! 🤗"];let hi=0;
+$("#heart").onclick=()=>{$("#heartTxt").textContent=hs[hi++%hs.length]};
+/* music */
+const au=$("#au");let mk=null;(async()=>{const u=await url("music");if(u){au.src=u}})();
+au.volume=.6;$("#vol").oninput=e=>au.volume=e.target.value;
+$("#mp").onclick=()=>{if(!au.src){toast("Belum ada musik. Unggah lewat Edit Kenangan.");return}au.paused?au.play().catch(()=>toast("Tidak bisa memutar file ini")):au.pause()};
+au.onerror=()=>toast("File audio tidak bisa diputar");au.onplay=()=>$("#viz").classList.add("on");au.onpause=()=>$("#viz").classList.remove("on");
+/* share */
+const SH={title:"Hadiah Ulang Tahun",text:"Ada kejutan ulang tahun untukmu 🎁",url:location.href};
+$("#cp").onclick=async()=>{try{await navigator.clipboard.writeText(location.href);toast("URL berhasil disalin ✓")}catch(e){prompt("Salin URL ini:",location.href)}};
+$("#wa").onclick=()=>open("https://wa.me/?text="+encodeURIComponent(SH.text+" "+location.href),"_blank","noopener");
+$("#shr").onclick=async()=>{if(navigator.share){try{await navigator.share(SH)}catch(e){}}else $("#cp").click()};
+$("#top").onclick=()=>scrollTo({top:0,behavior:RM?"auto":"smooth"});
+$("#themeBtn").onclick=()=>{const d=document.documentElement,dark=getComputedStyle(d).getPropertyValue("--bg").trim()==="#231a2a";d.dataset.theme=dark?"light":"dark"};
+/* export/import */
+const b64=b=>new Promise(r=>{const f=new FileReader();f.onload=()=>r(f.result);f.readAsDataURL(b)});
+$("#exp").onclick=async()=>{toast("Menyiapkan…");const ph={};const keys=["main","music",...cfg.gallery.map(g=>g.id),...cfg.timeline.map(t=>"tl_"+t.id)];for(const k of keys){try{const b=await gget(k);if(b)ph[k]=await b64(b)}catch(e){}}
+try{const data=JSON.stringify({cfg,ph}),dl=window.claude?await claude.use("downloads"):null;if(dl)await dl.save({filename:"hadiah-ulang-tahun.json",data});else{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([data],{type:"application/json"}));a.download="hadiah-ulang-tahun.json";a.click()}toast("Config diekspor ✓")}catch(e){toast("Export dibatalkan atau gagal")}};
+const d2b=u=>{const [h,b]=u.split(","),m=/:(.*?);/.exec(h)[1],s=atob(b),a=new Uint8Array(s.length);for(let i=0;i<s.length;i++)a[i]=s.charCodeAt(i);return new Blob([a],{type:m})};
+$("#imp").onchange=async e=>{try{const d=JSON.parse(await e.target.files[0].text());if(!d.cfg)throw 0;cfg={...DEF,...d.cfg};for(const k in d.ph||{}){await gput(k,d2b(d.ph[k]));drop(k)}save();await render();const mu=await url("music");if(mu)au.src=mu;toast("Config diimpor ✓")}catch(x){toast("File config tidak valid")}e.target.value=""};
+/* editor */
+function ed(){const b=$("#edb"),th=["pink","lav","peach","mint"],tn={pink:"Pink",lav:"Lavender",peach:"Peach",mint:"Mint"};
+b.innerHTML=`<h3>Edit Kenangan</h3>
+<label for="e1">Nama penerima</label><input type="text" id="e1" value="${esc(cfg.to)}">
+<label for="e2">Nama pengirim</label><input type="text" id="e2" value="${esc(cfg.from)}">
+<label for="e3">Usia (opsional)</label><input type="number" id="e3" min="0" max="150" value="${esc(cfg.age)}">
+<label for="e4">Tanggal ulang tahun</label><input type="date" id="e4" value="${esc(cfg.date)}">
+<label for="e5">Tema warna</label><select id="e5">${th.map(t=>`<option value="${t}" ${cfg.theme===t?"selected":""}>${tn[t]}</option>`).join("")}</select>
+<label for="e6">Subjudul</label><input type="text" id="e6" value="${esc(cfg.sub)}">
+<label for="e7">Isi surat (gunakan [NAMA])</label><textarea id="e7" style="min-height:200px">${esc(cfg.letter)}</textarea>
+<label for="e8">Pesan kejutan</label><textarea id="e8">${esc(cfg.surprise)}</textarea>
+<label for="e9">Pesan penutup</label><textarea id="e9">${esc(cfg.closing)}</textarea>
+<label for="e10">Kuis: satu baris per soal → Pertanyaan|Opsi1;Opsi2;Opsi3|nomor jawaban benar</label><textarea id="e10" style="min-height:140px">${esc(cfg.quiz)}</textarea>
+<label>Foto utama</label><div class="row" style="justify-content:flex-start"><div class="photo" id="pv" style="width:80px;margin:0;font-size:28px">🎂</div><input type="file" id="fm" accept="image/jpeg,image/png,image/webp"><button class="sm ghost" id="fmd">Hapus</button></div>
+<label>Galeri (maks. 24 foto, bisa pilih banyak)</label><input type="file" id="fg" accept="image/jpeg,image/png,image/webp" multiple><div id="gl"></div>
+<label>Timeline</label><div id="tll"></div><button class="sm ghost" id="tla">+ Tambah kenangan</button>
+<label>Musik latar (pastikan kamu berhak memakai file audio ini)</label><input type="file" id="fa" accept="audio/*"> <button class="sm ghost" id="fad">Hapus musik</button>
+<div class="row"><button id="es">Simpan</button><button class="ghost" id="ec">Tutup</button></div>`;
+const err=e=>toast(e.message||"Terjadi kesalahan");
+const glist=async()=>{$("#gl").innerHTML="";for(const [i,g] of cfg.gallery.entries()){const u=await url(g.id),r=document.createElement("div");r.className="r";r.innerHTML=`<div class="row" style="margin:0;flex-wrap:nowrap"><img class="th" alt="" src="${u||""}"><input type="text" placeholder="Caption" value="${esc(g.cap||"")}" aria-label="Caption foto ${i+1}"><label class="btn sm ghost" style="margin:0">Ganti<input type="file" hidden accept="image/jpeg,image/png,image/webp"></label><button class="sm ghost" aria-label="Hapus foto ${i+1}">🗑</button></div>`;r.querySelector("input").onchange=e=>{g.cap=e.target.value;save();render()};r.querySelector("input[type=file]").onchange=async e=>{try{await gput(g.id,await prep(e.target.files[0]));drop(g.id);toast("Foto diganti ✓");glist();render()}catch(x){err(x)}};r.querySelector("button").onclick=async()=>{await gdel(g.id);drop(g.id);cfg.gallery.splice(i,1);save();glist();render()};$("#gl").appendChild(r)}};
+const tlist=()=>{$("#tll").innerHTML="";cfg.timeline.forEach((t,i)=>{const r=document.createElement("div");r.className="r";r.innerHTML=`<input type="text" value="${esc(t.t)}" aria-label="Judul"><input type="date" value="${esc(t.d)}" aria-label="Tanggal"><input type="text" value="${esc(t.x)}" aria-label="Deskripsi"><input type="file" accept="image/jpeg,image/png,image/webp" aria-label="Foto"><button class="sm ghost">🗑 Hapus</button><button class="sm ghost">Hapus foto</button>`;const [a,d,x,f,del,dp]=r.querySelectorAll("input,button");a.oninput=()=>t.t=a.value;d.oninput=()=>t.d=d.value;x.oninput=()=>t.x=x.value;f.onchange=async()=>{try{await gput("tl_"+t.id,await prep(f.files[0]));drop("tl_"+t.id);toast("Foto ditambahkan ✓");save();render()}catch(e){err(e)}};dp.onclick=async()=>{await gdel("tl_"+t.id).catch(()=>{});drop("tl_"+t.id);render();toast("Foto dihapus")};del.onclick=async()=>{await gdel("tl_"+t.id).catch(()=>{});cfg.timeline.splice(i,1);save();tlist();render()};$("#tll").appendChild(r)})};
+glist();tlist();url("main").then(u=>{if(u)$("#pv").innerHTML=`<img alt="" src="${u}">`});
+$("#fm").onchange=async e=>{try{await gput("main",await prep(e.target.files[0]));drop("main");const u=await url("main");$("#pv").innerHTML=`<img alt="" src="${u}">`;render();toast("Foto utama diganti ✓")}catch(x){err(x)}e.target.value=""};
+$("#fmd").onclick=async()=>{await gdel("main").catch(()=>{});drop("main");$("#pv").textContent="🎂";render()};
+$("#fg").onchange=async e=>{let n=0;for(const f of e.target.files){if(cfg.gallery.length>=24){toast("Maksimal 24 foto");break}try{const id="g"+uid();await gput(id,await prep(f));cfg.gallery.push({id,cap:""});n++}catch(x){err(x)}}save();glist();render();if(n)toast(n+" foto ditambahkan ✓");e.target.value=""};
+$("#tla").onclick=()=>{cfg.timeline.push({id:"t"+uid(),t:"Kenangan baru",d:"",x:""});tlist()};
+$("#fa").onchange=async e=>{const f=e.target.files[0];if(!f)return;if(!f.type.startsWith("audio/")&&!/\.(mp3|m4a|aac|wav|ogg|opus|flac)$/i.test(f.name))return toast("File harus berupa audio");if(f.size>20*1048576)return toast("Audio maksimal 20 MB");try{await gput("music",f);drop("music");au.src=await url("music");toast("Musik siap. Tekan ♪ untuk memutar ✓")}catch(x){err(x)}};
+$("#fad").onclick=async()=>{await gdel("music").catch(()=>{});drop("music");au.pause();au.removeAttribute("src")};
+window.edApply=()=>{if(!$("#e1"))return;const v=i=>$("#e"+i).value;Object.assign(cfg,{to:v(1).trim()||"Kamu",from:v(2).trim(),age:v(3),date:v(4),theme:v(5),sub:v(6),letter:v(7),surprise:v(8),closing:v(9),quiz:v(10)});save();render()};let dt;b.oninput=()=>{clearTimeout(dt);dt=setTimeout(edApply,500)};$("#es").onclick=()=>{mc("#ed");toast("Tersimpan ✓")};
+$("#ec").onclick=()=>mc("#ed");mo("#ed")}
+$("#editBtn").onclick=ed;
+if(SEED){$("#editBtn").style.display="none";$("#exp").style.display="none";$("#imp").parentNode.style.display="none"}
+render();
+</script></body></html>
