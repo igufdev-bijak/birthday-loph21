@@ -4,130 +4,260 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Admin — Birthday Loph</title>
+  <title>Dashboard — Birthday Loph</title>
   <style>
     * { box-sizing: border-box; }
     body {
-      margin: 0;
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      padding: 20px;
-      background: #fff4f6;
-      color: #442c35;
+      margin: 0; padding: 20px;
+      background: #fff4f6; color: #442c35;
       font-family: system-ui, sans-serif;
     }
-    main {
-      width: 100%;
-      max-width: 390px;
-      padding: 28px;
-      border-radius: 20px;
-      background: white;
-      box-shadow: 0 10px 40px #7c34451a;
+    main { max-width: 680px; margin: 25px auto; }
+    section {
+      background: white; padding: 22px;
+      margin-bottom: 16px; border-radius: 16px;
+      box-shadow: 0 6px 25px #7c344510;
     }
-    h1 { margin-top: 0; font-size: 25px; }
-    p { color: #765e68; line-height: 1.5; }
-    label { display: block; margin: 16px 0 6px; }
-    input {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #dfcbd2;
-      border-radius: 10px;
-      font: inherit;
+    h1 { font-size: 26px; }
+    label { display: block; margin: 14px 0 6px; font-weight: 600; }
+    input, textarea, select {
+      width: 100%; padding: 11px; border: 1px solid #dfcbd2;
+      border-radius: 9px; font: inherit; background: white;
     }
+    textarea { min-height: 90px; resize: vertical; }
     button {
-      width: 100%;
-      margin-top: 20px;
-      padding: 13px;
-      border: 0;
-      border-radius: 10px;
-      background: #a83f63;
-      color: white;
-      font: inherit;
-      font-weight: 600;
+      padding: 12px 16px; border: 0; border-radius: 9px;
+      background: #a83f63; color: white; font: inherit;
+      font-weight: 600; cursor: pointer; margin: 8px 5px 0 0;
     }
-    #status { overflow-wrap: anywhere; }
+    button.secondary { background: #735b65; }
+    button:disabled { opacity: .5; }
+    #status { overflow-wrap: anywhere; line-height: 1.5; }
     a { color: #a83f63; }
+    .hint { color: #765e68; font-size: 14px; line-height: 1.5; }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="./supabase-config.js"></script>
 </head>
 <body>
-  <main>
-    <h1>Admin Birthday Loph</h1>
-    <p>Masuk untuk mengelola konten website.</p>
+<main>
+  <h1>Dashboard Birthday Loph</h1>
+  <p class="hint">Pengaturan yang disimpan di sini masuk ke tabel site_settings. Perubahan belum otomatis mengubah halaman publik sampai integrasi publik selesai.</p>
 
+  <section id="loginPanel">
+    <h2>Login admin</h2>
     <form id="loginForm">
-      <label for="email">Email admin</label>
-      <input id="email" type="email" autocomplete="username"
-        required>
-
+      <label for="email">Email</label>
+      <input id="email" type="email" autocomplete="username" required>
       <label for="password">Password</label>
-      <input id="password" type="password"
-        autocomplete="current-password" required>
-
-      <button id="loginButton" type="submit">Masuk</button>
+      <input id="password" type="password" autocomplete="current-password" required>
+      <button id="loginButton">Masuk</button>
     </form>
+  </section>
 
-    <p id="status" role="status" aria-live="polite"></p>
-    <p><a href="./">Kembali ke website</a></p>
-  </main>
+  <section id="editor" hidden>
+    <h2>Konten utama</h2>
+    <form id="settingsForm">
+      <label for="recipient_name">Nama penerima</label>
+      <input id="recipient_name" maxlength="120">
 
-  <script>
-    const statusEl = document.getElementById("status");
-    const button = document.getElementById("loginButton");
+      <label for="recipient_age">Umur</label>
+      <input id="recipient_age" type="number" min="0" max="150">
 
-    if (!window.supabase || !SUPABASE_URL ||
-        !SUPABASE_ANON_KEY) {
-      statusEl.textContent =
-        "Konfigurasi Supabase belum berhasil dimuat.";
-    } else {
-      const client = window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_ANON_KEY
-      );
+      <label for="birthday_date">Tanggal ulang tahun</label>
+      <input id="birthday_date" type="date">
 
-      document.getElementById("loginForm")
-        .addEventListener("submit", async (event) => {
-          event.preventDefault();
-          button.disabled = true;
-          statusEl.textContent = "Memeriksa akun...";
+      <label for="hero_title">Judul utama</label>
+      <input id="hero_title" maxlength="200">
 
-          try {
-            const { data, error } =
-              await client.auth.signInWithPassword({
-                email: document.getElementById("email").value.trim(),
-                password: document.getElementById("password").value
-              });
+      <label for="hero_subtitle">Subjudul</label>
+      <textarea id="hero_subtitle"></textarea>
 
-            if (error) throw error;
+      <label for="sender_name">Nama pengirim</label>
+      <input id="sender_name" maxlength="120">
 
-            const { data: admin, error: adminError } =
-              await client.from("admins")
-                .select("user_id")
-                .eq("user_id", data.user.id)
-                .maybeSingle();
+      <label for="opening_message">Ucapan pembuka</label>
+      <textarea id="opening_message"></textarea>
 
-            if (adminError) throw adminError;
+      <label for="closing_message">Ucapan penutup</label>
+      <textarea id="closing_message"></textarea>
 
-            if (!admin) {
-              await client.auth.signOut();
-              throw new Error(
-                "Akun ini tidak terdaftar sebagai admin."
-              );
-            }
+      <label for="theme">Tema</label>
+      <input id="theme" placeholder="Contoh: pink">
 
-            statusEl.textContent =
-              "Login berhasil dan akun terverifikasi sebagai admin. " +
-              "Dashboard pengelolaan belum dibuat.";
-          } catch (error) {
-            statusEl.textContent =
-              "Gagal: " + (error.message || "Terjadi kesalahan.");
-          } finally {
-            button.disabled = false;
-          }
-        });
+      <label for="font_style">Gaya font</label>
+      <input id="font_style">
+
+      <label for="background_style">Gaya latar</label>
+      <input id="background_style">
+
+      <label for="music_path">Path musik di Supabase Storage</label>
+      <input id="music_path" placeholder="Kosongkan jika belum ada">
+
+      <label for="music_volume">Volume musik (0–1)</label>
+      <input id="music_volume" type="number" min="0" max="1" step="0.1">
+
+      <button id="saveButton">Simpan pengaturan</button>
+      <button id="reloadButton" type="button" class="secondary">Muat ulang</button>
+      <button id="logoutButton" type="button" class="secondary">Keluar</button>
+    </form>
+  </section>
+
+  <section>
+    <p id="status" role="status" aria-live="polite">Memuat konfigurasi...</p>
+    <a href="./">Kembali ke website surprise</a>
+  </section>
+</main>
+
+<script>
+(() => {
+  const statusEl = document.getElementById("status");
+  const loginPanel = document.getElementById("loginPanel");
+  const editor = document.getElementById("editor");
+  const form = document.getElementById("settingsForm");
+  const fields = [
+    "recipient_name", "recipient_age", "birthday_date",
+    "hero_title", "hero_subtitle", "sender_name",
+    "opening_message", "closing_message", "theme",
+    "font_style", "background_style", "music_path", "music_volume"
+  ];
+
+  if (!window.supabase || !window.SUPABASE_URL ||
+      !window.SUPABASE_ANON_KEY) {
+    statusEl.textContent =
+      "Konfigurasi Supabase tidak ditemukan. Periksa supabase-config.js.";
+    return;
+  }
+
+  const client = window.supabase.createClient(
+    window.SUPABASE_URL, window.SUPABASE_ANON_KEY
+  );
+
+  async function verifyAdmin(user) {
+    const { data, error } = await client.from("admins")
+      .select("user_id")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    if (error) throw error;
+    if (!data) throw new Error("Akun ini bukan admin.");
+  }
+
+  async function showEditor() {
+    const { data: sessionData } = await client.auth.getSession();
+    const session = sessionData.session;
+
+    if (!session) {
+      loginPanel.hidden = false;
+      editor.hidden = true;
+      return;
     }
-  </script>
+
+    await verifyAdmin(session.user);
+    loginPanel.hidden = true;
+    editor.hidden = false;
+    await loadSettings();
+  }
+
+  async function loadSettings() {
+    statusEl.textContent = "Memuat pengaturan...";
+    const { data, error } = await client.from("site_settings")
+      .select("*")
+      .limit(1)
+      .maybeSingle();
+
+    if (error) throw error;
+    if (!data) {
+      statusEl.textContent =
+        "Belum ada baris pengaturan yang bisa diedit.";
+      return;
+    }
+
+    fields.forEach((key) => {
+      const el = document.getElementById(key);
+      if (el) el.value = data[key] ?? "";
+    });
+
+    statusEl.textContent = "Pengaturan berhasil dimuat.";
+  }
+
+  document.getElementById("loginForm").addEventListener("submit",
+    async (event) => {
+      event.preventDefault();
+      const button = document.getElementById("loginButton");
+      button.disabled = true;
+      statusEl.textContent = "Memeriksa akun...";
+
+      try {
+        const { data, error } = await client.auth.signInWithPassword({
+          email: document.getElementById("email").value.trim(),
+          password: document.getElementById("password").value
+        });
+        if (error) throw error;
+        await verifyAdmin(data.user);
+        await showEditor();
+      } catch (error) {
+        await client.auth.signOut();
+        statusEl.textContent = "Gagal: " + error.message;
+      } finally {
+        button.disabled = false;
+      }
+    });
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const button = document.getElementById("saveButton");
+    button.disabled = true;
+
+    try {
+      const { data: sessionData } = await client.auth.getSession();
+      if (!sessionData.session) throw new Error("Silakan login kembali.");
+      await verifyAdmin(sessionData.session.user);
+
+      const { data: existing, error: readError } = await client
+        .from("site_settings").select("id").limit(1).maybeSingle();
+      if (readError) throw readError;
+      if (!existing) throw new Error("Baris pengaturan tidak ditemukan.");
+
+      const payload = {};
+      fields.forEach((key) => {
+        const el = document.getElementById(key);
+        if (key === "recipient_age" || key === "music_volume") {
+          payload[key] = el.value === "" ? null : Number(el.value);
+        } else {
+          payload[key] = el.value === "" ? null : el.value;
+        }
+      });
+
+      const { error } = await client.from("site_settings")
+        .update(payload).eq("id", existing.id);
+      if (error) throw error;
+
+      statusEl.textContent =
+        "Pengaturan tersimpan di Supabase. Halaman publik belum disambungkan ke data ini.";
+    } catch (error) {
+      statusEl.textContent = "Gagal menyimpan: " + error.message;
+    } finally {
+      button.disabled = false;
+    }
+  });
+
+  document.getElementById("reloadButton").addEventListener("click",
+    () => loadSettings().catch((e) =>
+      statusEl.textContent = "Gagal memuat: " + e.message));
+
+  document.getElementById("logoutButton").addEventListener("click",
+    async () => {
+      await client.auth.signOut();
+      loginPanel.hidden = false;
+      editor.hidden = true;
+      statusEl.textContent = "Anda sudah keluar.";
+    });
+
+  showEditor().catch((error) => {
+    statusEl.textContent = "Gagal membuka dashboard: " + error.message;
+  });
+})();
+</script>
 </body>
 </html>
