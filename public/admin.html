@@ -1,0 +1,133 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin — Birthday Loph</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      background: #fff4f6;
+      color: #442c35;
+      font-family: system-ui, sans-serif;
+    }
+    main {
+      width: 100%;
+      max-width: 390px;
+      padding: 28px;
+      border-radius: 20px;
+      background: white;
+      box-shadow: 0 10px 40px #7c34451a;
+    }
+    h1 { margin-top: 0; font-size: 25px; }
+    p { color: #765e68; line-height: 1.5; }
+    label { display: block; margin: 16px 0 6px; }
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #dfcbd2;
+      border-radius: 10px;
+      font: inherit;
+    }
+    button {
+      width: 100%;
+      margin-top: 20px;
+      padding: 13px;
+      border: 0;
+      border-radius: 10px;
+      background: #a83f63;
+      color: white;
+      font: inherit;
+      font-weight: 600;
+    }
+    #status { overflow-wrap: anywhere; }
+    a { color: #a83f63; }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./supabase-config.js"></script>
+</head>
+<body>
+  <main>
+    <h1>Admin Birthday Loph</h1>
+    <p>Masuk untuk mengelola konten website.</p>
+
+    <form id="loginForm">
+      <label for="email">Email admin</label>
+      <input id="email" type="email" autocomplete="username"
+        required>
+
+      <label for="password">Password</label>
+      <input id="password" type="password"
+        autocomplete="current-password" required>
+
+      <button id="loginButton" type="submit">Masuk</button>
+    </form>
+
+    <p id="status" role="status" aria-live="polite"></p>
+    <p><a href="./">Kembali ke website</a></p>
+  </main>
+
+  <script>
+    const statusEl = document.getElementById("status");
+    const button = document.getElementById("loginButton");
+
+    if (!window.supabase || !SUPABASE_URL ||
+        !SUPABASE_ANON_KEY) {
+      statusEl.textContent =
+        "Konfigurasi Supabase belum berhasil dimuat.";
+    } else {
+      const client = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+      );
+
+      document.getElementById("loginForm")
+        .addEventListener("submit", async (event) => {
+          event.preventDefault();
+          button.disabled = true;
+          statusEl.textContent = "Memeriksa akun...";
+
+          try {
+            const { data, error } =
+              await client.auth.signInWithPassword({
+                email: document.getElementById("email").value.trim(),
+                password: document.getElementById("password").value
+              });
+
+            if (error) throw error;
+
+            const { data: admin, error: adminError } =
+              await client.from("admins")
+                .select("user_id")
+                .eq("user_id", data.user.id)
+                .maybeSingle();
+
+            if (adminError) throw adminError;
+
+            if (!admin) {
+              await client.auth.signOut();
+              throw new Error(
+                "Akun ini tidak terdaftar sebagai admin."
+              );
+            }
+
+            statusEl.textContent =
+              "Login berhasil dan akun terverifikasi sebagai admin. " +
+              "Dashboard pengelolaan belum dibuat.";
+          } catch (error) {
+            statusEl.textContent =
+              "Gagal: " + (error.message || "Terjadi kesalahan.");
+          } finally {
+            button.disabled = false;
+          }
+        });
+    }
+  </script>
+</body>
+</html>
