@@ -260,5 +260,77 @@ window.edApply=()=>{if(!$("#e1"))return;const v=i=>$("#e"+i).value;Object.assign
 $("#ec").onclick=()=>mc("#ed");mo("#ed")}
 $("#editBtn").onclick=ed;
 if(SEED){$("#editBtn").style.display="none";$("#exp").style.display="none";$("#imp").parentNode.style.display="none"}
-render();
+
+async function startBirthdayPage() {
+  try {
+    if (
+      window.supabase &&
+      typeof SUPABASE_URL !== "undefined" &&
+      typeof SUPABASE_ANON_KEY !== "undefined"
+    ) {
+      const db = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+      );
+
+      const { data, error } = await db
+        .from("site_settings")
+        .select(
+          "recipient_name, recipient_age, birthday_date, hero_title, hero_subtitle, sender_name, opening_message, closing_message, theme"
+        )
+        .limit(1)
+        .maybeSingle();
+
+      if (error) throw error;
+
+      if (data) {
+        if (data.recipient_name)
+          cfg.to = data.recipient_name;
+
+        if (data.recipient_age != null)
+          cfg.age = String(data.recipient_age);
+
+        if (data.birthday_date)
+          cfg.date = data.birthday_date;
+
+        if (data.sender_name != null)
+          cfg.from = data.sender_name;
+
+        if (data.hero_subtitle != null)
+          cfg.sub = data.hero_subtitle;
+
+        if (data.opening_message != null)
+          cfg.letter = data.opening_message;
+
+        if (data.closing_message != null)
+          cfg.closing = data.closing_message;
+
+        const themes = {
+          pink: "pink",
+          lav: "lav",
+          lavender: "lav",
+          peach: "peach",
+          mint: "mint"
+        };
+
+        if (data.theme && themes[data.theme.toLowerCase()])
+          cfg.theme = themes[data.theme.toLowerCase()];
+
+        if (data.hero_title) {
+          const heading = $("#hero h1");
+          if (heading && heading.firstChild)
+            heading.firstChild.textContent =
+              data.hero_title + ", ";
+        }
+      }
+    }
+  } catch (error) {
+    console.error("Gagal memuat pengaturan Supabase:", error);
+  }
+
+  await render();
+}
+
+startBirthdayPage();
+  
 </script></body></html>
