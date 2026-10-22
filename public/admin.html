@@ -136,9 +136,6 @@ const client = window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_ANON_KEY
 );
-  const client = window.supabase.createClient(
-    window.SUPABASE_URL, window.SUPABASE_ANON_KEY
-  );
 
   async function verifyAdmin(user) {
     const { data, error } = await client.from("admins")
