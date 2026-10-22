@@ -360,8 +360,8 @@ async function startBirthdayPage() {
       "position:fixed;bottom:16px;left:12px;right:12px;z-index:9999;padding:12px;background:#fff3cd;color:#664d03;border-radius:12px;font:14px system-ui";
 
     status.textContent =
-      "Pengaturan online gagal dimuat. Periksa koneksi dan konfigurasi Supabase.";
-
+  "Supabase error: " + (error.message || String(error));
+    
     document.body.appendChild(status);
   }
 
