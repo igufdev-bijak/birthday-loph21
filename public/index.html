@@ -273,120 +273,81 @@ $("#ec").onclick=()=>mc("#ed");mo("#ed")}
 $("#editBtn").onclick=ed;
 if(SEED){$("#editBtn").style.display="none";$("#exp").style.display="none";$("#imp").parentNode.style.display="none"}
 
-  async function startBirthdayPage() {
-  try {
-    if (
-      !window.supabase ||
-      typeof SUPABASE_URL === "undefined" ||
-      typeof SUPABASE_ANON_KEY === "undefined"
-    ) {
-      throw new Error(
-        "Library Supabase atau konfigurasi tidak termuat."
-      );
-    }
 
+async function startBirthdayPage() {
+  try {
     const db = window.supabase.createClient(
       SUPABASE_URL,
       SUPABASE_ANON_KEY
     );
 
-    cfg = { ...DEF };
-
     const { data, error } = await db
       .from("site_settings")
-      .select(
-        "recipient_name, recipient_age, birthday_date, hero_title, hero_subtitle, sender_name, opening_message, closing_message, theme"
-      )
+      .select(`
+        recipient_name,
+        recipient_age,
+        birthday_date,
+        hero_title,
+        hero_subtitle,
+        sender_name,
+        opening_message,
+        closing_message,
+        theme,
+        music_path,
+        music_volume
+      `)
       .limit(1)
       .maybeSingle();
 
     if (error) throw error;
+    if (!data) throw new Error("Data site_settings kosong.");
 
-    if (!data) {
-      throw new Error("Data site_settings tidak ditemukan.");
+    // Ambil data langsung dari Supabase
+    cfg.to = data.recipient_name || "Kamu";
+    cfg.age = data.recipient_age == null
+      ? ""
+      : String(data.recipient_age);
+    cfg.date = data.birthday_date || "";
+    cfg.from = data.sender_name || "";
+    cfg.sub = data.hero_subtitle || "";
+    cfg.letter = data.opening_message || "";
+    cfg.closing = data.closing_message || "";
+    cfg.theme = data.theme || "pink";
+
+    // Perbarui judul utama
+    const heading = document.querySelector("#hero h1");
+    if (heading) {
+      heading.innerHTML =
+        `${esc(data.hero_title || "Happy Birthday")}, ` +
+        `<span id="hName">${esc(cfg.to)}${cfg.age ? " (" + esc(cfg.age) + ")" : ""}</span>!`;
     }
 
-    cfg = { ...DEF };
+    // Muat musik dari URL publik atau path Storage
+    const audio = document.querySelector("#au");
+    if (audio && data.music_path) {
+      const path = data.music_path;
 
-    if (data.recipient_name) {
-      cfg.to = data.recipient_name;
+      audio.src = path.startsWith("http")
+        ? path
+        : `${SUPABASE_URL}/storage/v1/object/public/audio/${path}`;
+
+      audio.volume = Math.max(
+        0,
+        Math.min(1, Number(data.music_volume ?? 0.6))
+      );
     }
 
-    if (data.recipient_age != null) {
-      cfg.age = String(data.recipient_age);
-    }
+    await render();
 
-    if (data.birthday_date) {
-      cfg.date = data.birthday_date;
-    }
-
-    if (data.sender_name != null) {
-      cfg.from = data.sender_name;
-    }
-
-    if (data.hero_subtitle != null) {
-      cfg.sub = data.hero_subtitle;
-    }
-
-    if (data.opening_message != null) {
-      cfg.letter = data.opening_message;
-    }
-
-    if (data.closing_message != null) {
-      cfg.closing = data.closing_message;
-    }
-
-    const themes = {
-      pink: "pink",
-      lav: "lav",
-      lavender: "lav",
-      peach: "peach",
-      mint: "mint"
-    };
-
-    if (
-      data.theme &&
-      themes[data.theme.toLowerCase()]
-    ) {
-      cfg.theme = themes[data.theme.toLowerCase()];
-    }
-
-    if (data.hero_title) {
-      const heading = document.querySelector("#hero h1");
-
-      if (heading && heading.firstChild) {
-        heading.firstChild.textContent =
-          data.hero_title + ", ";
-      }
-    }
-
-    console.info(
-      "Pengaturan Supabase berhasil dimuat:",
-      cfg.to
-    );
+    console.info("Pengaturan Supabase berhasil dimuat.");
   } catch (error) {
-    console.error(
-      "Gagal memuat pengaturan Supabase:",
-      error
-    );
-
-    restoreLocalFallback();
-
-    const status = document.createElement("div");
-    status.style.cssText =
-      "position:fixed;bottom:16px;left:12px;right:12px;z-index:9999;padding:12px;background:#fff3cd;color:#664d03;border-radius:12px;font:14px system-ui";
-
-    status.textContent =
-      "Supabase error: " + (error.message || String(error)) +
-      ". Menggunakan pengaturan lokal sebagai fallback.";
-
-    document.body.appendChild(status);
+    console.error("Gagal memuat site_settings:", error);
+    toast("Pengaturan gagal dimuat dari Supabase.");
   }
-
-  await render();
-  }
+}
 
 startBirthdayPage();
+  
   
   
 </script></body></html>
