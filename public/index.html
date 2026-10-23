@@ -130,7 +130,19 @@ gallery:[],timeline:[{id:"t1",t:"First Meeting",d:"",x:"Awal dari sebuah cerita.
 quiz:"Siapa yang paling senang kamu berulang tahun?|Aku;Aku juga;Semua orang di sekitarmu|3\nKado terbaik untukmu adalah...|Kue;Waktu bersama;Dua-duanya|3\nUmur hanyalah...|Angka;Level baru;Alasan makan kue|2"};
 const WISH=["Semoga harimu semanis kue ulang tahunmu.","Semoga semua usahamu pelan-pelan berbuah.","Semoga kamu selalu dikelilingi orang yang tulus.","Semoga kesehatan selalu menemanimu.","Semoga tidur nyenyak dan bangun dengan semangat.","Semoga rezekimu mengalir lancar.","Semoga hal yang kamu tunggu segera datang.","Semoga kamu selalu berani mencoba.","Semoga tawamu tidak pernah kehabisan alasan.","Semoga kamu pulang ke tempat yang hangat.","Semoga mimpimu selangkah lebih dekat.","Semoga kamu lebih sayang pada dirimu sendiri.","Semoga hari buruk cepat berlalu dan hari baik tinggal lama.","Semoga kamu selalu merasa cukup dan dicintai.","Semoga tahun ini penuh kejutan manis."];
 let SEED=null;try{SEED=JSON.parse(document.getElementById("seed").textContent)}catch(e){}
-let cfg;try{cfg={...DEF,...(SEED?SEED.cfg:JSON.parse(localStorage.getItem("bd_cfg")||"{}"))}}catch(e){cfg={...DEF}}
+let cfg = { ...DEF };
+function restoreLocalFallback() {
+  if (SEED) return;
+
+  try {
+     const stored = JSON.parse(localStorage.getItem("bd_cfg") || "{}");
+    if (stored && typeof stored === "object") {
+      cfg = { ...DEF, ...stored };
+}
+   } catch (e) {
+   cfg = { ...DEF };
+  }
+ }
 const save=()=>{if(SEED)return;try{localStorage.setItem("bd_cfg",JSON.stringify(cfg))}catch(e){toast("Gagal menyimpan pengaturan")}};
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const fill=s=>s.replace(/\[NAMA\]/g,cfg.to);
@@ -279,6 +291,9 @@ async function startBirthdayPage() {
       SUPABASE_ANON_KEY
     );
 
+    // reset dulu supaya data Supabase selalu menang
+    cfg = { ...DEF };
+
     const { data, error } = await db
       .from("site_settings")
       .select(
@@ -292,6 +307,9 @@ async function startBirthdayPage() {
     if (!data) {
       throw new Error("Data site_settings tidak ditemukan.");
     }
+
+    // remote data harus overwrite state lama
+    cfg = { ...DEF };
 
     if (data.recipient_name) {
       cfg.to = data.recipient_name;
@@ -355,17 +373,22 @@ async function startBirthdayPage() {
       error
     );
 
+    restoreLocalFallback();
+
     const status = document.createElement("div");
     status.style.cssText =
       "position:fixed;bottom:16px;left:12px;right:12px;z-index:9999;padding:12px;background:#fff3cd;color:#664d03;border-radius:12px;font:14px system-ui";
 
     status.textContent =
-  "Supabase error: " + (error.message || String(error));
-    
+      "Supabase error: " + (error.message || String(error)) +
+      ". Menggunakan pengaturan lokal sebagai fallback.";
+
     document.body.appendChild(status);
   }
 
   await render();
+}
+  
 }
 
 startBirthdayPage();
