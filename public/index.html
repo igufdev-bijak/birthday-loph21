@@ -273,8 +273,7 @@ $("#ec").onclick=()=>mc("#ed");mo("#ed")}
 $("#editBtn").onclick=ed;
 if(SEED){$("#editBtn").style.display="none";$("#exp").style.display="none";$("#imp").parentNode.style.display="none"}
 
-
-async function startBirthdayPage() {
+  async function startBirthdayPage() {
   try {
     if (
       !window.supabase ||
@@ -291,7 +290,6 @@ async function startBirthdayPage() {
       SUPABASE_ANON_KEY
     );
 
-    // reset dulu supaya data Supabase selalu menang
     cfg = { ...DEF };
 
     const { data, error } = await db
@@ -308,7 +306,6 @@ async function startBirthdayPage() {
       throw new Error("Data site_settings tidak ditemukan.");
     }
 
-    // remote data harus overwrite state lama
     cfg = { ...DEF };
 
     if (data.recipient_name) {
@@ -387,9 +384,7 @@ async function startBirthdayPage() {
   }
 
   await render();
-}
-  
-}
+  }
 
 startBirthdayPage();
   
